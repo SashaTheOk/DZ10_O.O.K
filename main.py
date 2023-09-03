@@ -43,6 +43,16 @@ class AddressBook(UserDict):
     def find_record(self, value):
         return self.data.get(value)
 
+    def edit_record(self, name, new_phones, new_emails):
+        if name in self.data:
+            record = self.data[name]
+            record.phones = [Phone(phone) for phone in new_phones]
+            record.emails = new_emails
+            self.data[name] = record
+            print(f"Contact {name} edited successfully.")
+        else:
+            print(f"Contact with Name '{name}' not found.")
+
 def main():
     address_book = AddressBook()
 
@@ -50,21 +60,22 @@ def main():
         print("\nOptions:")
         print("1. Add Contact")
         print("2. Find Contact")
-        print("3. Delete Contact")
-        print("4. Exit")
+        print("3. Edit Contact")
+        print("4. Delete Contact")
+        print("5. Exit")
 
         choice = input("Select an option: ")
 
         if choice == "1":
             name = input("Enter Name: ")
-            phone_numbers = input("Enter Phone Numbers (comma-separated): ").split(',')
-            emails = input("Enter Emails (comma-separated): ").split(',')
-            
+            phone_numbers = input("Enter Phone Numbers (Якщо кілька, то вказати через кому): ").split(',')
+            emails = input("Enter Emails (Якщо кілька, то вказати через кому): ").split(',')
+
             name_field = Name(name.strip())
             record = Record(name_field, phone_numbers, emails)
             address_book.add_record(record)
             print(f"Contact {name} added to the address book.")
-        
+
         elif choice == "2":
             search_term = input("Enter Name to search for: ")
             record = address_book.find_record(search_term)
@@ -80,6 +91,12 @@ def main():
                 print(f"Contact with Name '{search_term}' not found.")
 
         elif choice == "3":
+            edit_name = input("Enter Name to edit: ")
+            new_phone_numbers = input("Enter New Phone Numbers (Якщо кілька, то вказати через кому): ").split(',')
+            new_emails = input("Enter New Emails (Якщо кілька, то вказати через кому): ").split(',')
+            address_book.edit_record(edit_name.strip(), new_phone_numbers, new_emails)
+
+        elif choice == "4":
             delete_term = input("Enter Name to delete: ")
             record = address_book.find_record(delete_term)
             if record:
@@ -88,7 +105,7 @@ def main():
             else:
                 print(f"Contact with Name '{delete_term}' not found.")
 
-        elif choice == "4":
+        elif choice == "5":
             print("Goodbye!")
             break
 
